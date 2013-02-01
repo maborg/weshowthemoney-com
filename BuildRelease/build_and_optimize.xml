@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     20/gen/07 18:43:16                                                        
+
+     project     weshowthemoney.com
+                   
+     marco borgna                                                                
+     ====================================================================== -->
+
+
+<project name="QUOTATE" basedir=".." default="make_quotate">
+	<property name="workspacedir" location="C:\DATI\workspace"/>
+
+	<property name="importdir" location="c:\SVILUPPO\proguard4.2\lib"/>
+
+
+	<target name="make_quotate" depends="make_prefuse,make_core,make_obfuscation"> <!-- make_obfuscation -->
+
+
+	</target>
+
+	<target name="make_core" description="Compile a project library">
+		<copy todir="./tmpclass/resources">
+			<fileset dir="./resources" id="id">
+			
+			</fileset>
+		</copy>
+		<copy todir="./tmpclass/com/weshowthemoney">
+			<fileset file="./com/weshowthemoney/messagesIT.properties" id="id2">
+			
+			</fileset>
+		</copy>
+		<javac  srcdir="." 
+					classpath="${workspacedir}\prefuse\;${workspacedir}\test_prefuse\lib\lucene-1.4.3.jar"  
+					destdir="./tmpclass" 
+					debug="false" 
+					debuglevel="lines,vars,source" 
+								
+			/>
+		<jar jarFile="weshowthemoney.jar" basedir="./tmpclass" manifest="./BuildRelease/META-INF/MANIFEST.MF" index="true"  >
+
+		</jar>
+	</target>
+
+	<target name="make_prefuse" description="Compile a project library">
+		<mkdir dir="./tmpclass"/>
+		<mkdir dir="./tmpclass/resources"/>
+		<javac  srcdir="${workspacedir}\prefuse\" 
+					classpath="${workspacedir}\prefuse\;${workspacedir}\prefuse\lib\lucene-1.4.3.jar;${java.home}\lib\rt.jar"  
+					destdir="./tmpclass" 
+					debug="true" 
+					debuglevel="lines,vars,source" 
+			/>
+	</target>
+
+	<target name="make_obfuscation" >
+
+		<java jar="${importdir}/proguard.jar" failonerror="true" fork="true">
+
+			<arg value="-verbose"/>
+			<arg value="-include ./BuildRelease/quotate.pro"/>
+
+		</java>
+		<deltree dir="./tmpclass"/>
+	</target>
+
+</project>
